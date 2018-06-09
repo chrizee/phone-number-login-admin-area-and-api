@@ -33,9 +33,6 @@
     <link rel="stylesheet" href="{{ asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
     <!-- jQuery 2.2.3 -->
     <script src="{{ asset('plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
-    <!-- jQuery UI 1.11.4 -->
-    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-    <script src="{{ asset("/vendor/unisharp/laravel-ckeditor/ckeditor.js") }}"></script>
     @if($path == 'users' && isset($people) && count($people) > 0)
         <link rel="stylesheet" href="{{ asset('plugins/datatables/dataTables.bootstrap.css') }}">
         <script type="text/javascript" src="{{ asset("plugins/datatables/jquery.dataTables.min.js") }}"></script>
