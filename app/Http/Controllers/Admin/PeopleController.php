@@ -37,16 +37,17 @@ class PeopleController extends Controller
      */
     public function store(Request $request)
     {
+
         $this->validate($request, [
             'name' => "string|required|max:191",
-            'email' => "email|required|max:191|string|unique:people",
+            'email' => "email|nullable|max:191|string|unique:people",
             'phone' => "string|required|size:11|unique:people",
             'password' => 'required|string|min:6|confirmed',
         ]);
 
         $person = new People;
         $person->name = $request->input('name');
-        $person->email = $request->input('email');
+        $person->email = !empty($request->input('email')) ? $request->input('email') : "";
         $person->phone = $request->input('phone');
         $person->password = bcrypt($request->input('password'));
         if($person->save())
@@ -65,7 +66,7 @@ class PeopleController extends Controller
         Validator::make($request->all(), [
             'email' => [
                 'bail',
-                'required',
+                'nullable',
                 'email',
                 'max:191',
                 Rule::unique('people')->ignore($request->input('id')),
@@ -83,7 +84,7 @@ class PeopleController extends Controller
 
         $person = People::findOrFail($request->input('id'));
         $person->name = $request->input('name');
-        $person->email = $request->input('email');
+        $person->email = !empty($request->input('email')) ? $request->input('email') : "";
         $person->phone = $request->input('phone');
         if(!empty($request->input('password')))
             $person->password = bcrypt($request->input('password'));
