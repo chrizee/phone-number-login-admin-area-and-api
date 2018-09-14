@@ -59,8 +59,9 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
-     * @return \App\User
+     * @param Request $request
+     * @return User
+     * @internal param array $data
      */
     protected function create(Request $request)
     {

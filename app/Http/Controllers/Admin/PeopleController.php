@@ -17,7 +17,7 @@ class PeopleController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
@@ -37,13 +37,16 @@ class PeopleController extends Controller
      */
     public function store(Request $request)
     {
-
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'name' => "string|required|max:191",
             'email' => "email|nullable|max:191|string|unique:people",
             'phone' => "string|required|size:11|unique:people",
             'password' => 'required|string|min:6|confirmed',
         ]);
+
+        if ($validator->fails()) {
+            return json_encode(["error" => "There is a problem with the form you submitted. Make sure all fields are of the correct type"]);
+        }
 
         $person = new People;
         $person->name = $request->input('name');
@@ -63,7 +66,7 @@ class PeopleController extends Controller
      */
     public function update(Request $request)
     {
-        Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'email' => [
                 'bail',
                 'nullable',
@@ -80,9 +83,14 @@ class PeopleController extends Controller
             ],
             'name' => 'bail|required|string|max:191',
             'password' => 'bail|nullable|string|min:6|confirmed'
-        ])->validate();
+        ]);
 
-        $person = People::findOrFail($request->input('id'));
+        if ($validator->fails()) {
+            return json_encode(["error" => "There is a problem with the form you submitted. Make sure all fields are of the correct type"]);
+        }
+
+        $person = People::find($request->input('id'));
+        if (empty($person)) return json_encode(['error' => "Invalid user"]);
         $person->name = $request->input('name');
         $person->email = !empty($request->input('email')) ? $request->input('email') : "";
         $person->phone = $request->input('phone');
@@ -121,7 +129,8 @@ class PeopleController extends Controller
      */
     public function destroy($id)
     {
-        $person = People::findOrFail($id);
+        $person = People::find($id);
+        if (empty($person)) return json_encode(['error' => "Invalid user"]);
         $person->delete();
         return redirect()->route('users.index')->with('success', "User deleted");
     }
@@ -129,7 +138,8 @@ class PeopleController extends Controller
     //for api delete
     public function delete($id)
     {
-        $person = People::findOrFail($id);
+        $person = People::find($id);
+        if (empty($person)) return json_encode(['error' => "Invalid user"]);
         $person->delete();
         return new PeopleResource($person);
     }

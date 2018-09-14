@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFirstAidsTable extends Migration
+class CreateExpensesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateFirstAidsTable extends Migration
      */
     public function up()
     {
-        Schema::create('first_aids', function (Blueprint $table) {
+        Schema::create('expenses', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->text('body');
-            $table->string('image')->nullable();
-            $table->softDeletes();
+            $table->string("item");
+            $table->decimal('amount', 10,2);
+            $table->integer("people_id")->unsigned();
+            $table->foreign("people_id")->references("id")->on("people");
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateFirstAidsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('first_aids');
+        Schema::dropIfExists('expenses');
     }
 }

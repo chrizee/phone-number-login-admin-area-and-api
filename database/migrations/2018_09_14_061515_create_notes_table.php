@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateHealthTipsTable extends Migration
+class CreateNotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateHealthTipsTable extends Migration
      */
     public function up()
     {
-        Schema::create('health_tips', function (Blueprint $table) {
+        Schema::create('notes', function (Blueprint $table) {
             $table->increments('id');
-            $table->mediumText('tip');
-            $table->string('image')->nullable();
-            $table->softDeletes();
+            $table->mediumText("note");
+            $table->integer("people_id")->unsigned();
+            $table->foreign("people_id")->references("id")->on("people");
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateHealthTipsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('health_tips');
+        Schema::dropIfExists('notes');
     }
 }
